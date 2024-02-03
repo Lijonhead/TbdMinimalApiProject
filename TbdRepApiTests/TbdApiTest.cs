@@ -18,7 +18,7 @@ namespace TbdRepApiTests
         {
             //Arrange
             DbContextOptions<TbdContext> options = new DbContextOptionsBuilder<TbdContext>()
-              .UseInMemoryDatabase("GetUsers_Fetch_ExistingUser")
+            .UseInMemoryDatabase("GetUsers_Fetch_ExistingUser")
 
               .Options; TbdContext context = new TbdContext(options);
             ITbdRepository repo = new TbdRepository(context);
