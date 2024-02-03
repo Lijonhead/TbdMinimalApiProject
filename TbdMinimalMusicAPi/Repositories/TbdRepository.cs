@@ -1,4 +1,5 @@
-﻿using TbdMinimalMusicAPi.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using TbdMinimalMusicAPi.Data;
 using TbdMinimalMusicAPi.Models;
 
 namespace TbdMinimalMusicAPi.Repositories
@@ -14,9 +15,25 @@ namespace TbdMinimalMusicAPi.Repositories
             _context = context;
         }
 
+        // This method adds artists to a user.
         public void AddArtists(int userId, List<Artist> artistsToAdd)
         {
-            throw new NotImplementedException();
+            
+            try
+            {
+                var user = _context.Users
+                    .Include(u => u.Artists)
+                    .FirstOrDefault(u => u.UserId == userId);
+                foreach (var artistToAdd in artistsToAdd)
+                {
+                    user.Artists.Add(artistToAdd);
+                }
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error adding artists: {ex}");
+            }
         }
 
         public void AddGenres(List<Genre> genres, int userId, int artistId)
