@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TbdMinimalMusicAPi.Data;
 using TbdMinimalMusicAPi.Handlers;
+using TbdMinimalMusicAPi.Repositories;
 
 namespace TbdMinimalMusicAPi
 {
@@ -11,6 +12,7 @@ namespace TbdMinimalMusicAPi
             var builder = WebApplication.CreateBuilder(args);
             var connectionstring = builder.Configuration.GetConnectionString("TbdDb");
             builder.Services.AddDbContext<TbdContext>(option => option.UseSqlServer(connectionstring));
+            builder.Services.AddScoped<ITbdRepository, TbdRepository>();
             var app = builder.Build();
 
             //GetEndPoints
