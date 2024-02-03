@@ -15,16 +15,53 @@ namespace TbdMinimalMusicAPi.Repositories
             _context = context;
         }
 
+        // This method adds artists to a user.
         public void AddArtists(int userId, List<Artist> artistsToAdd)
         {
-            throw new NotImplementedException();
+            
+            try
+            {
+                var user = _context.Users
+                    .Include(u => u.Artists)
+                    .FirstOrDefault(u => u.UserId == userId);
+                foreach (var artistToAdd in artistsToAdd)
+                {
+                    user.Artists.Add(artistToAdd);
+                }
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error adding artists: {ex}");
+            }
+        }
+        // This method adds genres to a specific user. 
+        public void AddGenres(List<Genre> genresToAdd, int userId, int artistId)
+        {
+            try
+            {
+                var user = _context.Users
+                    .Include(u => u.Artists)
+                    .Include(u => u.Genres)
+                    .FirstOrDefault(u => u.UserId == userId);
+                var artist = _context.Artists
+                    .Include(u => u.Genres)
+                    .FirstOrDefault(u => u.ArtistId == artistId);
+                foreach (var genreToAdd in genresToAdd)
+                {
+                    user.Genres.Add(genreToAdd);
+                    artist.Genres.Add(genreToAdd);
+                }
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error adding artists: {ex}");
+            }
         }
 
-        public void AddGenres(List<Genre> genres, int userId, int artistId)
-        {
-            throw new NotImplementedException();
-        }
-        //this method adds songs to user
+        // This method adds songs to a user.
+
         public void AddSongs(List<Song> songsToAdd, int artistId, int userId, int genreId)
         {
             try
@@ -32,6 +69,7 @@ namespace TbdMinimalMusicAPi.Repositories
                 var user = _context.Users
                     .Include(u => u.Songs)
                     .Include(u => u.Artists)
+
                     .Include(u => u.Genres).FirstOrDefault(u => u.UserId == userId); var artist = _context.Artists
                     .Include(u => u.Users)
                     .Include(u => u.Songs)
@@ -40,11 +78,31 @@ namespace TbdMinimalMusicAPi.Repositories
                     .Include(u => u.Users)
                     .Include(u => u.Songs)
                     .Include(u => u.Artists).FirstOrDefault(u => u.GenreId == genreId); foreach (var song in songsToAdd)
+
+                    .Include(u => u.Genres)
+                    .FirstOrDefault(u => u.UserId == userId);
+                var artist = _context.Artists
+                    .Include(u => u.Users)
+                    .Include(u => u.Songs)
+                    .Include(u => u.Genres)
+                    .FirstOrDefault(u => u.ArtistId == artistId);
+                var genre = _context.Genres
+                    .Include(u => u.Users)
+                    .Include(u => u.Songs)
+                    .Include(u => u.Artists)
+                    .FirstOrDefault(u => u.GenreId == genreId);
+                foreach (var song in songsToAdd)
+r
                 {
                     var newsong = new Song
                     {
                         SongTitle = song.SongTitle,
+
                     }; user.Songs.Add(newsong);
+
+                    };
+                    user.Songs.Add(newsong);
+
                     artist.Songs.Add(newsong);
                     genre.Songs.Add(newsong);
                 }
