@@ -11,8 +11,8 @@ namespace TbdMinimalMusicAPi
             var connectionstring = builder.Configuration.GetConnectionString("TbdDb");
             builder.Services.AddDbContext<TbdContext>(option => option.UseSqlServer(connectionstring));
             var app = builder.Build();
+            Console.WriteLine("Hugo yo");
 
-          
 
             app.Run();
         }
