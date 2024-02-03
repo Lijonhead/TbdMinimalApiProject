@@ -1,4 +1,5 @@
-﻿using TbdMinimalMusicAPi.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using TbdMinimalMusicAPi.Data;
 using TbdMinimalMusicAPi.Models;
 
 namespace TbdMinimalMusicAPi.Repositories
@@ -23,10 +24,36 @@ namespace TbdMinimalMusicAPi.Repositories
         {
             throw new NotImplementedException();
         }
-
-        public void AddSongs(List<Song> songs, int artistId, int userId, int genreId)
+        //this method adds songs to user
+        public void AddSongs(List<Song> songsToAdd, int artistId, int userId, int genreId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var user = _context.Users
+                    .Include(u => u.Songs)
+                    .Include(u => u.Artists)
+                    .Include(u => u.Genres).FirstOrDefault(u => u.UserId == userId); var artist = _context.Artists
+                    .Include(u => u.Users)
+                    .Include(u => u.Songs)
+                    .Include(u => u.Genres)
+                    .FirstOrDefault(u => u.ArtistId == artistId); var genre = _context.Genres
+                    .Include(u => u.Users)
+                    .Include(u => u.Songs)
+                    .Include(u => u.Artists).FirstOrDefault(u => u.GenreId == genreId); foreach (var song in songsToAdd)
+                {
+                    var newsong = new Song
+                    {
+                        SongTitle = song.SongTitle,
+                    }; user.Songs.Add(newsong);
+                    artist.Songs.Add(newsong);
+                    genre.Songs.Add(newsong);
+                }
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error adding songs: {ex}");
+            }
         }
 
         public User Adduser(User user)
