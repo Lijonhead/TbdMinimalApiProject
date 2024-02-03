@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TbdMinimalMusicAPi.Data;
+using TbdMinimalMusicAPi.Handlers;
 
 namespace TbdMinimalMusicAPi
 {
@@ -12,7 +13,29 @@ namespace TbdMinimalMusicAPi
             builder.Services.AddDbContext<TbdContext>(option => option.UseSqlServer(connectionstring));
             var app = builder.Build();
 
-            Console.WriteLine("Test");
+            //GetEndPoints
+
+            app.MapGet("/GetUser/{userId}", TbdHandlers.GetUsernew);
+            app.MapGet("/GetUsers/", TbdHandlers.GetUsersNew);
+
+            app.MapGet("/GetArtists/{userId}", TbdHandlers.GetArtistsNew);
+
+            app.MapGet("/GetRelated/{artistId}", TbdHandlers.GetRelatedResponseAsync);
+
+            app.MapGet("/GetSongs/{userId}", TbdHandlers.GetSongsNew);
+
+            app.MapGet("/GetGenres/{userId}", TbdHandlers.GetGenresNew);
+
+
+
+
+
+            //postEndpoints
+
+            app.MapPost("/AddUser/", TbdHandlers.AddUser);
+            app.MapPost("/AddArtists/{userId}", TbdHandlers.AddArtists);
+            app.MapPost("/AddGenres/{userId}/{artistId}", TbdHandlers.AddGerens);
+            app.MapPost("/AddSongs/{userId}/{artistId}/{genreId}", TbdHandlers.AddSongs);
 
 
             app.Run();

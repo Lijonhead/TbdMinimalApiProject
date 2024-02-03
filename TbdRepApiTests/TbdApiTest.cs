@@ -21,9 +21,14 @@ namespace TbdRepApiTests
               .UseInMemoryDatabase("GetUsers_Fetch_ExistingUser")
 
               .Options; TbdContext context = new TbdContext(options);
-            ITbdRepository repo = new TbdRepository(context);    //Act    User userToAdd = new User { UserId = 1, UserName = "Dino" };
+            ITbdRepository repo = new TbdRepository(context);
+            //Act
+            User userToAdd = new User { UserId = 1, UserName = "Dino" };
             context.Users.Add(userToAdd);
-            context.SaveChanges(); User result = repo.GetUser(1);    //Assert
+            context.SaveChanges(); User result = repo.GetUser(1);    
+            
+            
+            //Assert
             Assert.IsNotNull(result);
             Assert.AreEqual(userToAdd, result);
             Assert.AreEqual("Dino", result.UserName);
