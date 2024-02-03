@@ -75,10 +75,15 @@ namespace TbdMinimalMusicAPi.Repositories
         {
             throw new NotImplementedException();
         }
-
+        //this method gets artists which belong to user
         public List<Artist> GetArtists(int userId)
         {
-            throw new NotImplementedException();
+            User? users = _context.Users
+                .Include(x => x.Artists).FirstOrDefault(a => a.UserId==userId); users = new User
+                {
+                    UserName=users.UserName,
+                    Artists=users.Artists.Select(x => new Artist { ArtistId=x.ArtistId, ArtistName=x.ArtistName, ArtistDescription=x.ArtistDescription }).ToList(),
+                }; return users.Artists.ToList();
         }
 
         public List<Genre> GetGenres(int userId)
