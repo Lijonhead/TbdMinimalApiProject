@@ -55,10 +55,15 @@ namespace TbdMinimalMusicAPi.Repositories
                 Console.WriteLine($"Error adding songs: {ex}");
             }
         }
-
+        //this method adds new users
         public User Adduser(User user)
         {
-            throw new NotImplementedException();
+            var newUser = new User
+            {
+                UserName = user.UserName,
+            }; _context.Users.Add(newUser);
+            _context.SaveChanges();
+            return newUser;
         }
 
         public bool AtristExists(int artistId)
